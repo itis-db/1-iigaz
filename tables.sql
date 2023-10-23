@@ -1,4 +1,3 @@
-
 create table if not exists activitytype
 (
     activitytypeid integer not null
@@ -7,8 +6,6 @@ create table if not exists activitytype
     name           text    not null,
     sysname        text    not null
 );
-
--- 
 
 create table if not exists activity
 (
