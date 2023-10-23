@@ -6,8 +6,15 @@ select row_number() over () as level, t.name from
 (
     with recursive get_hierarchy as
     (
-        select 1 as level, activityid, activitytypeid, name, null as area_name, 0 as area_level
+        select 1 as level, activityid, activitytypeid, name,
+               case when contract.contractid is not null
+                         then (select name from area where areaid = contract.areaid)
+                    else null
+                    end as area_name,
+               0 as area_level
                from activity
+               left join contract
+                    on activity.activityid = contract.contractid
                where activity.activityid = coalesce(pn_activityid, 1)
         union all
         select get_hierarchy.level + 1 as level,
@@ -36,4 +43,4 @@ select row_number() over () as level, t.name from
 $$
 language sql;
 
-select * from hierarchy(null)
+select * from hierarchy(null);
